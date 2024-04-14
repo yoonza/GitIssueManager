@@ -1,12 +1,9 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom'; // Link 컴포넌트를 import합니다.
 import Header from '../Components/Header';
 import AdvertisementImageSrc from './IMG_2126.jpg';
 
-// LoadingSpinner 컴포넌트 정의
 const LoadingSpinner = () => (
   <SpinnerContainer>
     <Spinner />
@@ -15,8 +12,12 @@ const LoadingSpinner = () => (
 
 const ListPage = () => {
   const [issues, setIssues] = useState([]);
-  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [selectedIssue, setSelectedIssue] = useState(null); // 선택된 이슈 상태 추가
+
+  const observer = useRef();
 
   useEffect(() => {
     const fetchIssues = async () => {
@@ -26,12 +27,15 @@ const ListPage = () => {
           `https://api.github.com/repos/angular/angular-cli/issues?page=${page}&per_page=10&state=open&sort=comments`,
           {
             headers: {
-              Authorization: 'YOUR_TOKEN' // 여기에 개인 액세스 토큰을 넣어주세요.
+              Authorization: 'YOUR_TOKEN'
             }
           }
         );
+        if (response.data.length === 0) {
+          setHasMore(false);
+          return;
+        }
         setIssues(prevIssues => [...prevIssues, ...response.data]);
-        setPage(prevPage => prevPage + 1);
       } catch (error) {
         console.error('Error fetching issues:', error);
       }
@@ -41,30 +45,51 @@ const ListPage = () => {
     fetchIssues();
   }, [page]);
 
+  const handleScroll = () => {
+    if (
+      window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight || // 스크롤이 맨 아래에 도달하지 않았거나,
+      loading || // 현재 로딩 중이거나,
+      !hasMore // 더 이상 데이터가 없으면 처리 중단
+    ) {
+      return;
+    }
+    setPage(prevPage => prevPage + 1); // 페이지 증가
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll); // 스크롤 이벤트를 감지하여 handleScroll 함수 실행
+    return () => window.removeEventListener('scroll', handleScroll); // 컴포넌트 언마운트 시 이벤트 리스너 제거
+  }, []);
+
+  // 클릭 시 자동으로 페이지 이동하는 함수
+  const handleIssueItemClick = (issueNumber) => {
+    setSelectedIssue(issueNumber); // 클릭한 이슈 번호를 상태에 저장
+    window.location.href = `/detail/${issueNumber}`;
+  };
+
   return (
     <Container>
       <Header organizationName="Angular" repositoryName="angular-cli" />
       <IssueList>
         {issues.map((issue, index) => (
           <React.Fragment key={issue.id}>
-            <IssueItem>
-              {/* 각 issue를 클릭하여 해당 이슈의 상세 페이지로 이동하는 링크 추가 */}
-              <LinkStyled to={`/detail/${issue.number}`}> 
-                <h3>#{issue.number} {issue.title}</h3>
-              </LinkStyled>
-              <p>작성자 {issue.user.login}, 작성일 {new Date(issue.created_at).toLocaleDateString()} 코멘트: {issue.comments} </p>
+            <IssueItem 
+              onClick={() => handleIssueItemClick(issue.number)} 
+              isSelected={selectedIssue === issue.number} // 선택된 이슈에 대한 조건 추가
+            >
+              <h3>#{issue.number} {issue.title}</h3>
+              <p>작성자 {issue.user.login}, 작성일 {new Date(issue.created_at).toLocaleDateString()} 코멘트: {issue.comments}</p>
             </IssueItem>
-            {index === 3 && ( // 다섯 번째 아이템인 경우에만 광고를 표시합니다.
+            {index === 4 && hasMore && (
               <IssueItem>
-                <AdvertisementBanner href="https://www.wanted.co.kr/" target="_blank">
-                  <AdvertisementImage src={AdvertisementImageSrc} alt="Advertisement Banner" />
-                </AdvertisementBanner>
+               <AdvertisementBanner href="https://www.wanted.co.kr/" target="_blank">
+                 <AdvertisementImage src={AdvertisementImageSrc} alt="Advertisement Banner" />
+               </AdvertisementBanner>
               </IssueItem>
             )}
           </React.Fragment>
         ))}
       </IssueList>
-      {loading && <LoadingSpinner />} {/* 로딩 상태일 때 로딩 스피너 표시 */}
     </Container>
   );
 };
@@ -74,34 +99,28 @@ export default ListPage;
 const Container = styled.div`
   font-family: Arial, sans-serif;
   padding: 20px;
-  width: 400px;
+  width: 100%; 
+  max-width: 80%; 
   height: 800px;
   border: 3px solid black;
-  margin:20px auto;
+  margin: 20px auto;
 `;
 
 const IssueList = styled.ul`
-    list-style-type: none;
-    padding: 0;
-    margin-top: 20px; /* IssueList와 Container 사이의 간격을 조정합니다. */
-    overflow-y: auto; /* IssueList가 넘치는 경우 스크롤을 추가합니다. */
-    max-height: 700px; /* 최대 높이를 지정하여 넘치는 경우 스크롤이 나타나도록 합니다. */
-    `;
-
+  list-style-type: none;
+  padding: 0;
+  margin-top: 20px;
+  overflow-y: auto;
+  max-height: 700px;
+`;
 
 const IssueItem = styled.li`
   border-bottom: 1px solid #ccc;
   margin-bottom: 10px;
   padding: 10px;
   font-size: 12px;
-`;
-
-const AdvertisementBanner = styled.a`
-  display: block;
-`;
-
-const AdvertisementImage = styled.img`
-  width: 100%;
+  cursor: pointer; 
+  background-color: ${props => props.isSelected ? '#ddd' : 'transparent'}; // 선택된 항목일 때 해당 이슈 항목을 특정 색상으로 표시
 `;
 
 const SpinnerContainer = styled.div`
@@ -125,8 +144,10 @@ const Spinner = styled.div`
   }
 `;
 
-// 링크 스타일링
-const LinkStyled = styled(Link)`
-  text-decoration: none; /* 링크의 밑줄을 제거합니다. */
-  color: black; /* 링크의 색상을 지정합니다. */
+const AdvertisementBanner = styled.a`
+  display: block;
+`;
+
+const AdvertisementImage = styled.img`
+  width: 100%;
 `;
