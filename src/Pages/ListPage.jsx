@@ -3,6 +3,8 @@ import axios from 'axios';
 import styled from 'styled-components';
 import Header from '../Components/Header';
 import AdvertisementImageSrc from './IMG_2126.jpg';
+import { useSelectedIssue } from '../Components/SelectedIssueContext';
+
 
 const LoadingSpinner = () => (
   <SpinnerContainer>
@@ -11,12 +13,17 @@ const LoadingSpinner = () => (
 );
 
 const ListPage = () => {
+  const { selectedIssue, setSelectedIssue } = useSelectedIssue(); // context 사용
+
   const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+<<<<<<< HEAD
   const [selectedIssue, setSelectedIssue] = useState(null); // 선택된 이슈 상태 추가
 
+=======
+>>>>>>> b627e06 (update context-api for listpages)
   const observer = useRef();
 
   useEffect(() => {
@@ -27,7 +34,11 @@ const ListPage = () => {
           `https://api.github.com/repos/angular/angular-cli/issues?page=${page}&per_page=10&state=open&sort=comments`,
           {
             headers: {
+<<<<<<< HEAD
               Authorization: 'YOUR_TOKEN'
+=======
+              Authorization: 'YOUR_ACCESS_TOKEN'
+>>>>>>> b627e06 (update context-api for listpages)
             }
           }
         );
@@ -59,7 +70,11 @@ const ListPage = () => {
   useEffect(() => {
     window.addEventListener('scroll', handleScroll); // 스크롤 이벤트를 감지하여 handleScroll 함수 실행
     return () => window.removeEventListener('scroll', handleScroll); // 컴포넌트 언마운트 시 이벤트 리스너 제거
+<<<<<<< HEAD
   }, []);
+=======
+  }, [handleScroll]);
+>>>>>>> b627e06 (update context-api for listpages)
 
   // 클릭 시 자동으로 페이지 이동하는 함수
   const handleIssueItemClick = (issueNumber) => {
@@ -120,7 +135,11 @@ const IssueItem = styled.li`
   padding: 10px;
   font-size: 12px;
   cursor: pointer; 
+<<<<<<< HEAD
   background-color: ${props => props.isSelected ? '#ddd' : 'transparent'}; // 선택된 항목일 때 해당 이슈 항목을 특정 색상으로 표시
+=======
+  background-color: ${props => props.isSelected ? '#ddd' : 'transparent'}; // 선택된 항목일 때 해당 이슈 항목을 특정 색상으로 표시 
+>>>>>>> b627e06 (update context-api for listpages)
 `;
 
 const SpinnerContainer = styled.div`
