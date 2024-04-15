@@ -7,7 +7,7 @@ import { SelectedIssueProvider } from './Components/SelectedIssueContext';
 function App() {
   return (
     <Router>
-      <SelectedIssueProvider> {/* SelectedIssueProvider 추가 */}
+      <SelectedIssueProvider>
         <Switch>
           <Route exact path="/" component={ListPage} />
           <Route path="/detail/:issueNumber" component={DetailPage} />
@@ -18,3 +18,5 @@ function App() {
 }
 
 export default App;
+
+

@@ -66,6 +66,7 @@ const DetailPage = () => {
 
 export default DetailPage;
 
+//styled-component
 const Container = styled.div`
   font-family: Arial, sans-serif;
   padding: 20px;
