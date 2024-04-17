@@ -1,70 +1,26 @@
-# Getting Started with Create React App
+# About GitIssueManager Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+❗️ 기술 스택
+1. React
+2. Axios
+3. Context-API
+4. Styled-components
 
-## Available Scripts
+📄 ListPage 기능 
+1. GitHub API를 사용하여 이슈를 가져옵니다.
+⚠️ 개인 Token을 발급해야 합니다.  
 
-In the project directory, you can run:
+2. 사용자의 스크롤 이벤트를 감지하여 새로운 이슈를 자동으로 로드합니다.
+⚠️ 페이지가 처음 로드될 때 초기 화면에는 아무것도 표시되지 않을 수 있습니다.
+⚠️ 사용자가 페이지를 아래로 스크롤하면 첫 번째 이슈 화면의 10개가 자동으로 로드됩니다. 
+⚠️ 추가로 이슈를 로드하려면 페이지를 계속 아래로 스크롤하면 됩니다.
+⭐️ LoadingSpinner을 활용하여 페이지 스크롤 시, 사용자에게 이슈가 추가되고 있음을 표시합니다.
 
-### `npm start`
+3. 이슈 목록에서 특정 이슈를 클릭하면 해당 이슈의 상세 페이지로 이동합니다.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+📄 DetailPage 기능 
+1. 상세 페이지에서는 이슈의 제목, 작성자, 작성일, 코멘트 수, 본문 등의 정보를 볼 수 있습니다.
+⚠️ 본문의 내용은 Markdown 형식을 적용하였습니다. 
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+2.  URL의 파라미터로 전달된 gitIssueNumber를 사용하여 해당 이슈의 상세 정보를 가져옵니다. 
+⚠️ 만약 전역 상태의 issues 배열에 해당 이슈의 정보가 없다면, API를 활용하여 데이터를 가져온 후, 전역 상태의 issues 배열에 추가합니다.
