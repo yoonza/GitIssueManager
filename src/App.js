@@ -1,22 +1,21 @@
+import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import ListPage from './Pages/ListPage';
 import DetailPage from './Pages/DetailPage';
-import { SelectedIssueProvider } from './Components/SelectedIssueContext';
+import { IssueProvider } from './Store/IssueContext'; // IssueProvider import
 
-
-function App() {
+const App = () => {
   return (
     <Router>
-      <SelectedIssueProvider>
+      <IssueProvider>
         <Switch>
-          <Route exact path="/" component={ListPage} />
-          <Route path="/detail/:issueNumber" component={DetailPage} />
+          <Route path="/" exact component={ListPage} />
+          <Route path="/detail/:gitIssueNumber" component={DetailPage} />
         </Switch>
-      </SelectedIssueProvider>
+      </IssueProvider>
     </Router>
   );
-}
+};
 
 export default App;
-
 

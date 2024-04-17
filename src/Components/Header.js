@@ -1,3 +1,4 @@
+// Listpage, Detailpage 공통 헤더 사용
 import React from 'react';
 import styled from 'styled-components';
 
