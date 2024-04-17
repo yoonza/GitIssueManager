@@ -6,7 +6,6 @@
 3. Context-API
 4. Styled-components
 <br/>
-<br/>
 📄 ListPage 기능 
 1. GitHub API를 사용하여 이슈를 가져옵니다.<br/>
 ⚠️ 개인 Token을 발급해야 합니다. <br/><br/>
